@@ -6,17 +6,21 @@
 class VertexBuffer
 {
 private:
-  uint32_t m_buffer;
+  uint32_t m_id;
 
 public:
+  VertexBuffer();
   VertexBuffer(uint32_t size, GLenum usage);
   VertexBuffer(uint32_t size, const void* data, GLenum usage);
   ~VertexBuffer();
 
+  void bufferData(uint32_t size, const void* data, GLenum usage);
   void subData(uint32_t offset, uint32_t size, const void* data);
   
   void bind();
   void unbind();
+
+  void deleteBuffer();
 };
 
 #endif

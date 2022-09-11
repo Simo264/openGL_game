@@ -9,11 +9,16 @@ private:
   uint32_t m_buffer;
 
 public:
+  IndexBuffer();
   IndexBuffer(uint32_t size, const void* data, GLenum usage);
   ~IndexBuffer();
   
+  void bufferData(uint32_t size, const void* data, GLenum usage);
+
   void bind();
   void unbind();
+
+  void deleteBuffer();
 };
 
 #endif

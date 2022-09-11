@@ -1,14 +1,25 @@
 #include "index_buffer.h"
 
+IndexBuffer::IndexBuffer()
+{
+  glGenBuffers(1, &m_buffer);
+}
+
 IndexBuffer::IndexBuffer(uint32_t size, const void* data, GLenum usage)
 {
   glGenBuffers(1, &m_buffer);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_buffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage); 
+  bind();
+  bufferData(size, data, usage); 
 }
+
 IndexBuffer::~IndexBuffer()
 {
-  glDeleteBuffers(1, &m_buffer);
+  deleteBuffer();
+}
+
+void IndexBuffer::bufferData(uint32_t size, const void* data, GLenum usage)
+{
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage); 
 }
   
 void IndexBuffer::bind()
@@ -18,4 +29,9 @@ void IndexBuffer::bind()
 void IndexBuffer::unbind()
 {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void IndexBuffer::deleteBuffer()
+{
+  glDeleteBuffers(1, &m_buffer);
 }
