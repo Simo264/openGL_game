@@ -12,14 +12,14 @@ VertexBuffer::VertexBuffer(uint32_t size, GLenum usage)
 {
   glGenBuffers(1, &m_id);
   bind();
-  bufferData(size, NULL, usage);
+  dataBuffer(size, NULL, usage);
 }
 
 VertexBuffer::VertexBuffer(uint32_t size, const void* data, GLenum usage)
 {
   glGenBuffers(1, &m_id);
   bind();
-  bufferData(size, data, usage);
+  dataBuffer(size, data, usage);
 }
 
 VertexBuffer::~VertexBuffer()
@@ -27,13 +27,15 @@ VertexBuffer::~VertexBuffer()
   deleteBuffer();
 }
 
-void VertexBuffer::bufferData(uint32_t size, const void* data, GLenum usage)
+void VertexBuffer::dataBuffer(uint32_t size, const void* data, GLenum usage)
 {
+  bind();
   glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 }
 
-void VertexBuffer::subData(uint32_t offset, uint32_t size, const void* data)
+void VertexBuffer::subDataBuffer(uint32_t offset, uint32_t size, const void* data)
 {
+  bind();
   glBufferSubData(GL_ARRAY_BUFFER, offset, size, data);
 }
 

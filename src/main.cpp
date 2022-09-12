@@ -15,6 +15,8 @@
 #include "vertex_buffer.h"
 #include "index_buffer.h"
 
+#include "transform.h"
+#include "object.h"
 #include "triangle.h"
 #include "square.h"
 
@@ -43,32 +45,24 @@ int main()
   // ------------------------------------
   Shader shader { "../shaders/vertex.shader", "../shaders/fragment.shader" };
 
-  Square square { 
-    std::array<glm::vec2, 4>{
-      Position(-0.5f, +0.5f),  // top left
-      Position(+0.5f, +0.5f),  // top right
-      Position(-0.5f, -0.5f),  // bottom left
-      Position(+0.5f, -0.5f),  // bottom right
-    },
-    std::array<glm::vec3, 4>{
-      Color(1, 0, 0),
-      Color(0, 1, 0),
-      Color(0, 0, 1),
-      Color(0, 1, 1)
-    },
-    std::array<uint32_t, 6>{ 0,1,2, 1,2,3 }
-  };
-
+  Square square;
 
   // render loop
   // -----------
   while (!window.shouldClose())
   {
+    const float deltaTime = static_cast<float>(glfwGetTime());
+
     window.clear();
     shader.use();
 
     square.render();
-    
+    square.rotate(deltaTime, glm::vec3{0, 0, 1});
+
+    shader.setMatrix4Float("model", square.transform.model);
+    shader.setMatrix4Float("view", square.transform.view);
+    shader.setMatrix4Float("projection", square.transform.projection);
+
     window.swapBuffersAndPullEvents();
   }
 

@@ -14,9 +14,9 @@ public:
   VertexBuffer(uint32_t size, const void* data, GLenum usage);
   ~VertexBuffer();
 
-  void bufferData(uint32_t size, const void* data, GLenum usage);
-  void subData(uint32_t offset, uint32_t size, const void* data);
-  
+  void dataBuffer(uint32_t size, const void* data, GLenum usage);
+  void subDataBuffer(uint32_t offset, uint32_t size, const void* data);
+
   void bind();
   void unbind();
 
