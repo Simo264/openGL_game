@@ -11,7 +11,9 @@ struct Transform
 
   Transform()
   {
-    model = view = projection = glm::mat4(1.0f);
+    model = glm::mat4(1.0f);
+    view = glm::mat4(1.0f);
+    projection = glm::mat4(1.0f);
   }
   Transform(const glm::mat4& m, const glm::mat4& v, const glm::mat4& p)
   {

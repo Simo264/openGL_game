@@ -11,8 +11,7 @@ public:
   Object() = default;
   ~Object() = default;
 
-  virtual void setTranform(const glm::vec4& transform) = 0;
-  virtual void render() = 0;
+  virtual void render(const Shader& shader) = 0;
 };
 
 #endif

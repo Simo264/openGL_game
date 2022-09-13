@@ -56,13 +56,11 @@ int main()
     window.clear();
     shader.use();
 
-    square.render();
-    square.rotate(deltaTime, glm::vec3{0, 0, 1});
-
-    shader.setMatrix4Float("model", square.transform.model);
-    shader.setMatrix4Float("view", square.transform.view);
-    shader.setMatrix4Float("projection", square.transform.projection);
-
+    square.render(shader);
+    square.scale(0.5, 0.5);
+    square.rotate(deltaTime*5, { 0,0,1 });
+    square.translate(sin(deltaTime), 0);
+                          
     window.swapBuffersAndPullEvents();
   }
 

@@ -6,7 +6,7 @@
 
 #include <array>
 
-class Triangle : public Object
+class Triangle
 {
 private:
   VertexArray vertexArray;
@@ -16,7 +16,6 @@ public:
   Triangle(std::array<glm::vec2,3> vPositions, std::array<glm::vec3,3> vColors);
   ~Triangle() = default;
 
-  void setTransform(const glm::vec4& transform);
   void render();
 };
 
@@ -44,11 +43,4 @@ void Triangle::render()
   vertexArray.bind();
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
-
-
-void Triangle::setTransform(const glm::vec4& transform)
-{
-
-}
-
 #endif
