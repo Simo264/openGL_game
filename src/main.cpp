@@ -2,8 +2,6 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #include <iostream>
 #include <array> 
@@ -25,8 +23,7 @@ constexpr int WIDTH = 720;
 constexpr int HEIGHT = 720;
 constexpr const char* TITLE = "simple 2D game";
 
-const Position vPositions[] = 
-{
+const std::array<Position, 4> vPositions = {
   Position(-0.5f, +0.5f),  // top left
   Position(+0.5f, +0.5f),  // top right
   Position(-0.5f, -0.5f),  // bottom left
@@ -46,6 +43,11 @@ int main()
   Shader shader { "../shaders/vertex.shader", "../shaders/fragment.shader" };
 
   Square square;
+  Triangle triangle {
+    { Position(-0.5f, +0.5f),Position(+0.5f, +0.5f),Position(-0.5f, -0.5f) }, 
+    { Color(1,0,0),Color(0,1,0),Color(0,0,1) },
+    GL_DYNAMIC_DRAW
+  };
 
   // render loop
   // -----------
@@ -60,6 +62,11 @@ int main()
     square.scale(0.5, 0.5);
     square.rotate(deltaTime*5, { 0,0,1 });
     square.translate(sin(deltaTime), 0);
+
+    triangle.render(shader);
+    triangle.scale(0.5, 0.5);
+    triangle.rotate(deltaTime, { 0,0,1 });
+    triangle.translate(sin(deltaTime), +1);
                           
     window.swapBuffersAndPullEvents();
   }

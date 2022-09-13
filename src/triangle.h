@@ -6,21 +6,25 @@
 
 #include <array>
 
-class Triangle
+class Triangle : public ObjectInterface
 {
 private:
   VertexArray vertexArray;
   VertexBuffer vertexBuffer;
 
 public:
-  Triangle(std::array<glm::vec2,3> vPositions, std::array<glm::vec3,3> vColors);
+  Triangle(const std::array<Position, 3>& vPositions, 
+    const std::array<Color, 3>& vColors, 
+    GLenum usage
+  );
   ~Triangle() = default;
 
-  void render();
+  void render(const Shader& shader) override;
 };
 
 
-Triangle::Triangle(std::array<glm::vec2,3> vPositions, std::array<glm::vec3,3> vColors)
+Triangle::Triangle(const std::array<Position, 3>& vPositions, 
+  const std::array<Color, 3>& vColors, GLenum usage)
 {
   const uint32_t sizePos = sizeof(vPositions)*sizeof(glm::vec2);
   const uint32_t sizeCol = sizeof(vColors)*sizeof(glm::vec3);
@@ -28,7 +32,7 @@ Triangle::Triangle(std::array<glm::vec2,3> vPositions, std::array<glm::vec3,3> v
   vertexArray.bind();
 
   vertexBuffer.bind();
-  vertexBuffer.dataBuffer(sizePos + sizeCol, NULL, GL_STATIC_DRAW);
+  vertexBuffer.dataBuffer(sizePos + sizeCol, NULL, usage);
   vertexBuffer.subDataBuffer(0, sizePos, vPositions.data());
   vertexBuffer.subDataBuffer(sizePos, sizeCol, vColors.data());
 
@@ -38,9 +42,12 @@ Triangle::Triangle(std::array<glm::vec2,3> vPositions, std::array<glm::vec3,3> v
   vertexArray.enableAttribute(1);
 }
 
-void Triangle::render()
+void Triangle::render(const Shader& shader)
 {
+  shader.setMatrix4Float("model", this->getModel());
   vertexArray.bind();
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+
+
 #endif

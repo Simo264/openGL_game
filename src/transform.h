@@ -3,25 +3,24 @@
 
 #include <glm/glm.hpp>
 
-struct Transform
+struct Transformation
 {
-  glm::mat4 model;
-  glm::mat4 view;
-  glm::mat4 projection;
+  glm::mat4 scaling;
+  glm::mat4 translation;
+  glm::mat4 rotation;
 
-  Transform()
+  Transformation()
   {
-    model = glm::mat4(1.0f);
-    view = glm::mat4(1.0f);
-    projection = glm::mat4(1.0f);
+    scaling = glm::mat4(1.0f);
+    translation = glm::mat4(1.0f);
+    rotation = glm::mat4(1.0f);
   }
-  Transform(const glm::mat4& m, const glm::mat4& v, const glm::mat4& p)
+  Transformation(const glm::mat4& s, const glm::mat4& t, const glm::mat4& r)
   {
-    model = m;
-    view = v;
-    projection = p;
+    scaling = s;
+    translation = t;
+    rotation = r;
   }
 };
-
 
 #endif
