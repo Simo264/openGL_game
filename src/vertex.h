@@ -3,14 +3,10 @@
 
 #include <glm/glm.hpp>
 
-using Position  = glm::vec2;  // x,y
-using Color     = glm::vec3;  // r,g,b
-
 struct Vertex
 {
-  Position position;
-  Color color;
+  glm::vec2 Position;
+  glm::vec2 Texture;
 };
-
 
 #endif

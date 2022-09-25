@@ -1,117 +1,152 @@
+/*******************************************************************
+** This code is part of Breakout.
+**
+** Breakout is free software: you can redistribute it and/or modify
+** it under the terms of the CC BY 4.0 license as published by
+** Creative Commons, either version 4 of the License, or (at your
+** option) any later version.
+******************************************************************/
+
 #include "shader.h"
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include <iostream>
-#include <fstream>
-#include <sstream>
 
-Shader::Shader(const char* vertexFilePath, const char* fragmentFilePath)
+Shader& Shader::use()
 {
-  std::string vertexShaderSrc;  
-  std::string fragmentShaderSrc; 
-  parseShader(vertexFilePath, vertexShaderSrc);
-  parseShader(fragmentFilePath, fragmentShaderSrc);
-
-  m_shader = createShaderProgram(vertexShaderSrc.c_str(), fragmentShaderSrc.c_str());
-}
-Shader::~Shader()
-{
-  glDeleteProgram(m_shader);
+	glUseProgram(ID);
+	return *this;
 }
 
-
-/****** Public methods *****/
-/***************************/
-void Shader::use()
+void Shader::compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
 {
-  glUseProgram(m_shader);
+	uint32_t sVertex, sFragment, gShader;
+
+	// vertex Shader
+	sVertex = compileShader(GL_VERTEX_SHADER, vertexSource);
+	checkCompileErrors(sVertex, "VERTEX");
+
+	// fragment Shader
+	sFragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
+	checkCompileErrors(sFragment, "FRAGMENT");
+
+	// if geometry shader source code is given, also compile geometry shader
+	if(geometrySource)
+	{
+		gShader = compileShader(GL_GEOMETRY_SHADER, geometrySource);
+		checkCompileErrors(gShader, "GEOMETRY");
+	}
+
+	// shader program
+	ID = glCreateProgram();
+	glAttachShader(ID, sVertex);
+	glAttachShader(ID, sFragment);
+	if(geometrySource)
+		glAttachShader(ID, gShader);
+
+	glLinkProgram(ID);
+	checkCompileErrors(ID, "PROGRAM");
+
+	// delete the shaders as they're linked into our program now and no longer necessary
+	glDeleteShader(sVertex);
+	glDeleteShader(sFragment);
+	if(geometrySource)
+		glDeleteShader(gShader);
 }
 
-void Shader::setBool(const char* name, bool value) const
+uint32_t Shader::compileShader(uint32_t target, const char* source)
 {
-  glUniform1i(glGetUniformLocation(m_shader, name), (int)value); 
-}
-void Shader::setInt(const char* name, int value) const  
-{
-  glUniform1i(glGetUniformLocation(m_shader, name), value); 
-}
-void Shader::setFloat(const char* name, float value) const
-{
-  glUniform1f(glGetUniformLocation(m_shader, name), value);
-}
-void Shader::setMatrix4Float(const char* name, const glm::mat4 &mat) const
-{
-  glUniformMatrix4fv(glGetUniformLocation(m_shader, name), 1, GL_FALSE, &mat[0][0]);
+	uint32_t shader = glCreateShader(target);
+	glShaderSource(shader, 1, &source, NULL);
+	glCompileShader(shader);
+	return shader;
 }
 
-int Shader::getAttribLocation(const char* name)
+
+
+void Shader::setFloat(const char *name, float value, bool useShader)
 {
-  return glGetAttribLocation(m_shader, name);
+	if(useShader)
+		use();
+	glUniform1f(glGetUniformLocation(ID, name), value);
+}
+void Shader::setInteger(const char *name, int value, bool useShader)
+{
+	if(useShader)
+		use();
+	glUniform1i(glGetUniformLocation(ID, name), value);
 }
 
-/****** Private methods *****/
-/****************************/
-void Shader::parseShader(const char* filePath, std::string& shader)
+void Shader::setVector2f(const char *name, float x, float y, bool useShader)
 {
-  std::ifstream file(filePath);
-  file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
-  try
-  {
-    std::stringstream shaderStream;
-    shaderStream << file.rdbuf();
-    shader = shaderStream.str();
-  }
-  catch(const std::ifstream::failure& e)
-  {
-    std::cerr << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
-  }
-  file.close();
+	if(useShader)
+		use();
+	glUniform2f(glGetUniformLocation(ID, name), x, y);
 }
-uint32_t Shader::compileShader(uint32_t type, const char* shaderSource)
+void Shader::setVector2f(const char *name, const glm::vec2 &value, bool useShader)
 {
-  uint32_t shader = glCreateShader(type);
-  glShaderSource(shader, 1, &shaderSource, NULL);
-  glCompileShader(shader);
-
-  // check for shader compile errors
-  int success;
-  char infoLog[512];
-  glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-  if (!success)
-  {
-    glGetShaderInfoLog(shader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::" 
-      << (type == GL_VERTEX_SHADER ? "VERTEX" : "FRAGMENT") 
-      << "::COMPILATION_FAILED\n" << infoLog << std::endl;
-    return 0;
-  }
-
-  return shader;
+	if(useShader)
+		use();
+	glUniform2f(glGetUniformLocation(ID, name), value.x, value.y);
 }
-uint32_t Shader::createShaderProgram(const char* vShaderSource, const char* fShaderSource)
+
+void Shader::setVector3f(const char *name, float x, float y, float z, bool useShader)
 {
-  uint32_t program = glCreateProgram();
-  uint32_t vShader = compileShader(GL_VERTEX_SHADER, vShaderSource);
-  uint32_t fShader = compileShader(GL_FRAGMENT_SHADER, fShaderSource);
-  
-  glAttachShader(program, vShader);
-  glAttachShader(program, fShader);
-  glLinkProgram(program);
+	if(useShader)
+		use();
+	glUniform3f(glGetUniformLocation(ID, name), x, y, z);
+}
+void Shader::setVector3f(const char *name, const glm::vec3 &value, bool useShader)
+{
+	if(useShader)
+		use();
+	glUniform3f(glGetUniformLocation(ID, name), value.x, value.y, value.z);
+}
 
-  // print linking errors if any
-  int success;
-  char infoLog[512];
-  glGetProgramiv(program, GL_LINK_STATUS, &success);
-  if(!success)
-  {
-    glGetProgramInfoLog(program, 512, NULL, infoLog);
-    std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-  }
+void Shader::setVector4f(const char *name, float x, float y, float z, float w, bool useShader)
+{
+	if(useShader)
+		use();
+	glUniform4f(glGetUniformLocation(ID, name), x, y, z, w);
+}
+void Shader::setVector4f(const char *name, const glm::vec4 &value, bool useShader)
+{
+	if(useShader)
+		use();
+	glUniform4f(glGetUniformLocation(ID, name), value.x, value.y, value.z, value.w);
+}
 
-  glDeleteShader(vShader);
-  glDeleteShader(fShader);
+void Shader::setMatrix4(const char *name, const glm::mat4 &matrix, bool useShader)
+{
+	if(useShader)
+		use();
+	glUniformMatrix4fv(glGetUniformLocation(ID, name), 1, false, glm::value_ptr(matrix));
+}
 
-  return program;
+
+void Shader::checkCompileErrors(uint32_t object, const std::string& type)
+{
+	int success;
+	char infoLog[1024];
+	if (type != "PROGRAM")
+	{
+		glGetShaderiv(object, GL_COMPILE_STATUS, &success);
+		if (!success)
+		{
+			glGetShaderInfoLog(object, 1024, NULL, infoLog);
+			std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
+					<< infoLog << "\n -- --------------------------------------------------- -- "
+					<< std::endl;
+		}
+	}
+	else
+	{
+		glGetProgramiv(object, GL_LINK_STATUS, &success);
+		if (!success)
+		{
+			glGetProgramInfoLog(object, 1024, NULL, infoLog);
+			std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
+					<< infoLog << "\n -- --------------------------------------------------- -- "
+					<< std::endl;
+		}
+	}
 }

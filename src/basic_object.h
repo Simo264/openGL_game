@@ -1,17 +1,19 @@
-#ifndef OBJECT_H
-#define OBJECT_H
+#ifndef ENTITY_INTERFACE_H
+#define ENTITY_INTERFACE_H
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-class ObjectInterface
+#include "transform.h"
+
+class BasicObjectInterface
 {
 protected:
   Transformation m_transform;
 
 public:
-  ObjectInterface() = default;
-  ~ObjectInterface() = default;
+  BasicObjectInterface() = default;
+  ~BasicObjectInterface() = default;
 
   void scale(float x, float y)    
   { 
@@ -25,12 +27,14 @@ public:
   {
     m_transform.rotation = glm::rotate(glm::mat4(1.0f), angle, rotationAxis);
   }
-  glm::mat4 getModel() const 
-  {
-    return m_transform.scaling * m_transform.translation * m_transform.rotation;
-  }
+  Transformation getTransform() const { return m_transform; }
 
-  virtual void render(const Shader& shader) = 0;
+  // glm::mat4 getModel() const 
+  // {
+  //   return m_transform.scaling * m_transform.translation * m_transform.rotation;
+  // }
+
+  virtual void render(const class Shader& shader) = 0;
 };
 
 #endif

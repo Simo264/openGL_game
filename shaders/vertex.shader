@@ -1,13 +1,14 @@
 #version 430 core
-layout (location = 0) in vec2 vPosition;
-layout (location = 1) in vec3 vColor;
+layout (location = 0) in vec2 position;   // (x, y)
+layout (location = 1) in vec2 textCoord;  // (s, t)
 
-out vec3 outColor;
+out vec2 outTextCoord;
 
 uniform mat4 model;
+uniform mat4 projection;
 
 void main()
 {
-  gl_Position =  model * vec4(vPosition, 0, 1);
-  outColor = vColor;
+  outTextCoord  = textCoord;
+  gl_Position   = projection * model * vec4(position, 0, 1);
 }

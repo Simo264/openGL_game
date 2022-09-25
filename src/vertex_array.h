@@ -3,25 +3,28 @@
 
 #include <GL/glew.h>
 
-#include "vertex_buffer.h"
-#include "index_buffer.h"
+class VertexBuffer;
+class VertexBufferLayout;
 
 class VertexArray
 {
 private:
   uint32_t m_id;
 
+
+
 public:
   VertexArray();
   ~VertexArray();
 
-  void addBuffer(VertexBuffer& buffer);
-  void addBuffer(IndexBuffer& indexBuffer);
+  void addBuffer(VertexBuffer& vb, const VertexBufferLayout& layout);
 
-  void setAttribute(uint32_t index, uint32_t size, uint32_t stride, const void* pointer);
+  void setAttribute(uint32_t index, uint32_t count, uint32_t type, 
+    bool normalized, uint64_t stride, const void* pointer);
+
   void enableAttribute(uint32_t index);
   void disableAttribute(uint32_t index);
-
+    
   void bind();
   void unbind();
 

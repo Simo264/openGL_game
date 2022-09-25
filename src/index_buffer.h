@@ -6,7 +6,7 @@
 class IndexBuffer
 {
 private:
-  uint32_t m_buffer;
+  uint32_t m_id;
 
 public:
   IndexBuffer();
@@ -17,7 +17,6 @@ public:
 
   void bind();
   void unbind();
-
   void deleteBuffer();
 };
 

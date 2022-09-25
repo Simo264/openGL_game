@@ -7,11 +7,11 @@ class VertexBuffer
 {
 private:
   uint32_t m_id;
+  uint32_t m_bufferSize;
 
 public:
   VertexBuffer();
-  VertexBuffer(uint32_t size, GLenum usage);
-  VertexBuffer(uint32_t size, const void* data, GLenum usage);
+  VertexBuffer(uint32_t size, const void* data, GLenum usage = GL_STATIC_DRAW);
   ~VertexBuffer();
 
   void dataBuffer(uint32_t size, const void* data, GLenum usage);
@@ -21,6 +21,8 @@ public:
   void unbind();
 
   void deleteBuffer();
+
+  uint32_t size() const { return m_bufferSize; }
 };
 
 #endif
