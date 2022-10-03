@@ -2,6 +2,8 @@
 #define GAME_H
 
 #include <GL/glew.h>
+#include <memory>
+
 
 // Represents the current state of the game
 enum GameState { 
@@ -12,6 +14,9 @@ enum GameState {
 
 class Game
 {
+private:
+  std::unique_ptr<class SpriteRenderer> m_ptrRenderer;
+
 public:
   GameState state;
 
@@ -20,7 +25,7 @@ public:
   uint32_t width;
   uint32_t height;
 
-  Game(uint32_t w, uint32_t h);
+  Game(uint32_t width, uint32_t height);
   ~Game();
 
   // initialize game state (load all shaders/textures/levels)

@@ -1,11 +1,7 @@
 #include "index_buffer.h"
 
-IndexBuffer::IndexBuffer()
-{
-  glGenBuffers(1, &m_id);
-}
-
 IndexBuffer::IndexBuffer(uint32_t size, const void* data, GLenum usage)
+  : m_size(size)
 {
   glGenBuffers(1, &m_id);
   bind();

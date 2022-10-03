@@ -11,8 +11,6 @@ class VertexArray
 private:
   uint32_t m_id;
 
-
-
 public:
   VertexArray();
   ~VertexArray();

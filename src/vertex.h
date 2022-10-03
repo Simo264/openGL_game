@@ -6,7 +6,7 @@
 struct Vertex
 {
   glm::vec2 Position;
-  glm::vec2 Texture;
+  glm::vec3 Color;
 };
 
 #endif

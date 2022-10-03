@@ -28,7 +28,7 @@ public:
     m_elements.push_back({ 
       GL_FLOAT, 
       static_cast<uint32_t>(count),
-      static_cast<uint32_t>(sizeof(float)*count), 
+      static_cast<uint32_t>(sizeof(float)*count),
       false,
       pointer
     });

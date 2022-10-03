@@ -49,7 +49,7 @@ public:
   void setVector4f (const char* name, float x, float y, float z, float w, bool useShader = false);
   void setVector4f (const char* name, const glm::vec4& value, bool useShader = false);
   
-  void setMatrix4  (const char* name, const glm::mat4& matrix, bool useShader = false);
+  void setMatrix4f  (const char* name, const glm::mat4& matrix, bool useShader = false);
 private:
   // checks if compilation or linking failed and if so, print the error logs
   void checkCompileErrors(uint32_t object, const std::string&); 

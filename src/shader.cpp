@@ -115,7 +115,7 @@ void Shader::setVector4f(const char *name, const glm::vec4 &value, bool useShade
 	glUniform4f(glGetUniformLocation(ID, name), value.x, value.y, value.z, value.w);
 }
 
-void Shader::setMatrix4(const char *name, const glm::mat4 &matrix, bool useShader)
+void Shader::setMatrix4f(const char *name, const glm::mat4 &matrix, bool useShader)
 {
 	if(useShader)
 		use();

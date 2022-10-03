@@ -3,6 +3,7 @@
 #include "vertex_buffer_layout.h"
 
 #include <glm/glm.hpp>
+#include <iostream>
 
 VertexArray::VertexArray()
 {

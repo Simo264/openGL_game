@@ -44,6 +44,11 @@ void Texture2D::generate(unsigned int width, unsigned int height, unsigned char*
   unbind();
 }
 
+void Texture2D::activeTexture(unsigned int count) const
+{
+  glActiveTexture(GL_TEXTURE0 + count);
+}
+
 void Texture2D::bind() const
 {
   glBindTexture(GL_TEXTURE_2D, ID);

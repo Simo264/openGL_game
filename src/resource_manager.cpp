@@ -20,26 +20,26 @@ std::map<const std::string, Shader>    ResourceManager::shaders;
 std::map<const std::string, Texture2D> ResourceManager::textures;
 
 
-Shader ResourceManager::loadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, const std::string& name)
+Shader* ResourceManager::loadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, const std::string& name)
 {
   shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile, gShaderFile);
-  return shaders[name];
+  return &shaders[name];
 }
 
-Shader ResourceManager::getShader(const std::string& name)
+Shader* ResourceManager::getShader(const std::string& name)
 {
-	return shaders[name];
+	return &shaders[name];
 }
 
-Texture2D ResourceManager::loadTexture(const char* file, bool alpha, const std::string& name)
+Texture2D* ResourceManager::loadTexture(const char* file, bool alpha, const std::string& name)
 {
 	textures[name] = loadTextureFromFile(file, alpha);
-	return textures[name];
+	return &textures[name];
 }
 
-Texture2D ResourceManager::getTexture(const std::string& name)
+Texture2D* ResourceManager::getTexture(const std::string& name)
 {
-	return textures[name];
+	return &textures[name];
 }
 
 void ResourceManager::clear()
