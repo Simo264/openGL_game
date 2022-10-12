@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <memory>
+#include <vector>
 
 
 // Represents the current state of the game
@@ -16,6 +17,9 @@ class Game
 {
 private:
   std::unique_ptr<class SpriteRenderer> m_ptrRenderer;
+
+  std::vector<class GameLevel> m_levels;
+  uint32_t m_currentLevel;
 
 public:
   GameState state;

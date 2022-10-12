@@ -2,8 +2,8 @@
 #include "sprite_renderer.h"
 #include "resource_manager.h"
 
-
 #include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 
 Game::Game(uint32_t width, uint32_t height)
 {
@@ -40,6 +40,8 @@ void Game::init()
 
   // load textures
   ResourceManager::loadTexture("../res/awesomeface.png", true, "face");
+  ResourceManager::loadTexture("../res/block.png", true, "block");
+  ResourceManager::loadTexture("../res/block_solid.png", true, "block_solid");
   
   m_ptrRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(shader));
 }
@@ -56,15 +58,19 @@ void Game::update(float deltaTime)
 
 void Game::render()
 {
+  const float dTime = static_cast<float>(glfwGetTime());
+
   Texture2D* texture = ResourceManager::getTexture("face");
-  glm::vec2 position;
-  glm::vec2 size;
-  float rotate;
+  const glm::vec2 position = glm::vec2(0, 0);
+  const glm::vec2 size = glm::vec2(1, 1);
+  const float rotate = dTime * 100;
+  const glm::vec3 color = glm::vec3(sin(dTime), 0.5, 0.5);
   
   m_ptrRenderer->drawSprite(
     texture,
     position,
     size,
-    rotate
+    rotate,
+    color
   );
 }

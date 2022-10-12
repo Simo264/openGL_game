@@ -47,27 +47,29 @@ SpriteRenderer::~SpriteRenderer() { }
 
 void SpriteRenderer::drawSprite(Texture2D* texture, 
   glm::vec2 position, 
-  glm::vec2 size, 
-  float rotate
+  glm::vec2 size,
+  float rotation,
+  glm::vec3 color
 )
 { 
   m_shader->use();
 
-  glm::mat4 scaling     = glm::mat4(1.0f);
-  glm::mat4 translation = glm::mat4(1.0f);
-  glm::mat4 rotation    = glm::mat4(1.0f);
+  glm::mat4 tanslationMatrix  = glm::mat4(1.0f);
+  glm::mat4 scalingMatrix     = glm::mat4(1.0f);
+  glm::mat4 rotationMatrix    = glm::mat4(1.0f);
 
-  // translation = glm::translate(translation, glm::vec3(-0.5f, -0.5f, 0));
-  // scaling = glm::scale(scaling, glm::vec3(sin(glfwGetTime()), 1, 0));
-  rotation = glm::rotate(rotation, (float) glfwGetTime(), glm::vec3(0, 0, 1));
+  tanslationMatrix = glm::translate(tanslationMatrix, glm::vec3(-0.5f, -0.5f, 0));
 
-  const glm::mat4 model = scaling * translation * rotation;
+  scalingMatrix = glm::scale(scalingMatrix, glm::vec3(size, 0));
+  rotationMatrix = glm::rotate(rotationMatrix, glm::radians(rotation), glm::vec3(0, 0, 1));
+  tanslationMatrix = glm::translate(tanslationMatrix, glm::vec3(position, 0));
+
+  const glm::mat4 model = scalingMatrix * rotationMatrix * tanslationMatrix;
   m_shader->setMatrix4f("model", model);
+  m_shader->setVector3f("spriteColor", color);
 
   texture->activeTexture();
   texture->bind();
-
   m_ptrVA->bind();
-
   glDrawElements(GL_TRIANGLES, m_ptrIB->size(), GL_UNSIGNED_INT, 0);
 }
