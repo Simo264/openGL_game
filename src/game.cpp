@@ -1,18 +1,21 @@
 #include "game.h"
-#include "sprite_renderer.h"
-#include "resource_manager.h"
+#include "shader.h"
+#include "game_object.h"
+#include "game_ball.h"
 
-#include <glm/glm.hpp>
+#include "resource_manager.h"
+#include "collision_detection.h"
+
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-Game::Game(uint32_t width, uint32_t height)
-{
-  
-}
+GameObject* background; 
+GameObject* player; 
+GameBall* ball;
 
-Game::~Game()
-{
-
+Game::Game(uint32_t width_, uint32_t height_)
+  : state{GAME_ACTIVE}, keys{}, width{width_}, height{height_}
+{  
 }
 
 void Game::init()
@@ -24,53 +27,111 @@ void Game::init()
     nullptr, 
     "sprite"
   );
-
-  // configure shaders
-  // glm::mat4 projection = glm::ortho(
-  //   0.0f,  // left
-  //   static_cast<float>(width),  // right
-  //   static_cast<float>(height), // bottom
-  //   0.0f,  // top
-  //   -1.0f, // near
-  //   1.0f   // far
-  // );
-
   shader->setInteger("image", 0);
-  // shader->setMatrix4f("projection", projection);
 
   // load textures
-  ResourceManager::loadTexture("../res/awesomeface.png", true, "face");
-  ResourceManager::loadTexture("../res/block.png", true, "block");
-  ResourceManager::loadTexture("../res/block_solid.png", true, "block_solid");
+  ResourceManager::loadTexture("../res/background.jpg",  false,  "background");
+  ResourceManager::loadTexture("../res/paddle.png",      true,   "paddle");
+  ResourceManager::loadTexture("../res/ball.png",        true,   "ball");
+  ResourceManager::loadTexture("../res/block.png",       false,  "block");
+  ResourceManager::loadTexture("../res/block_solid.png", false,  "block_solid");
+
+  // load levels
+  levels.push_back(GameLevel("../res/one.lvl",   width, height / 2));
+  levels.push_back(GameLevel("../res/two.lvl",   width, height / 2));
+  levels.push_back(GameLevel("../res/three.lvl", width, height / 2));
+  levels.push_back(GameLevel("../res/four.lvl",  width, height / 2));
+  currentLevel = 0;
   
-  m_ptrRenderer = std::unique_ptr<SpriteRenderer>(new SpriteRenderer(shader));
+  background = new GameObject(
+    GL_STATIC_DRAW,
+    { 0,0 },
+    { 720,720 },
+    ResourceManager::getTexture("background"),
+    { 0,1,0 }
+  );
+  player = new GameObject(
+    GL_STATIC_DRAW,
+    { 300,700 },
+    { 100,20 },
+    ResourceManager::getTexture("paddle"),
+    { 1,1,1 },
+    0.f,
+    { 500.f,0 }
+  );
+
+  const glm::vec2 ballDim = { 50,50 };
+  ball = new GameBall(
+    { player->position.x + (ballDim.x / 2), player->position.y - ballDim.y },
+    ballDim,
+    ResourceManager::getTexture("ball"),
+    { 1,1,1 },
+    0.f,
+    { 100.0f,-350.0f }
+  );
 }
 
 void Game::processInput(float deltaTime)
 {
+  if(state != GAME_ACTIVE) return;
 
+  const float velocity = player->velocity.x * deltaTime;
+  
+  // move playerboard
+  if(keys[GLFW_KEY_A])
+  {
+    if(player->position.x >= 0.f)
+    {
+      player->position.x -= velocity;
+      if (ball->stuck)
+        ball->position.x -= velocity;
+    }
+  }
+  else if(keys[GLFW_KEY_D])
+  {
+    if(player->position.x <= width - player->dimension.x)
+    {
+      player->position.x += velocity;
+      if(ball->stuck)
+        ball->position.x += velocity;
+    }
+  }
+  if(keys[GLFW_KEY_SPACE])
+    ball->stuck = false;
 }
 
 void Game::update(float deltaTime)
 {
+  ball->move(deltaTime, width);
 
+  doCollisions();
 }
 
 void Game::render()
 {
-  const float dTime = static_cast<float>(glfwGetTime());
+  if(state != GAME_ACTIVE) return;
 
-  Texture2D* texture = ResourceManager::getTexture("face");
-  const glm::vec2 position = glm::vec2(0, 0);
-  const glm::vec2 size = glm::vec2(1, 1);
-  const float rotate = dTime * 100;
-  const glm::vec3 color = glm::vec3(sin(dTime), 0.5, 0.5);
+  Shader* shader = ResourceManager::getShader("sprite");
+
+  background->render(shader);
+
+  player->render(shader);
   
-  m_ptrRenderer->drawSprite(
-    texture,
-    position,
-    size,
-    rotate,
-    color
-  );
+  levels[currentLevel].render(shader);
+
+  ball->render(shader);
+}
+
+void Game::doCollisions()
+{
+  for (GameObject* object : levels[currentLevel].objects)
+  {
+    if(object->destroyed) continue;
+
+    if (CollisionDetection::checkCollision(ball, object))
+    {
+      if (!object->isSolid)
+        object->destroyed = true;
+    }
+  }
 }

@@ -9,10 +9,7 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 #include <string>
 
 // General purpsoe shader object. Compiles from file, generates
@@ -27,7 +24,7 @@ public:
   uint32_t ID; 
   
   // constructor
-  Shader() = default;
+  Shader() { };
 
   // sets the current shader as active
   Shader& use();

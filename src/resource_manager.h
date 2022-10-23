@@ -12,11 +12,8 @@
 #include <map>
 #include <string>
 
-#include <GL/glew.h>
-
-#include "texture2D.h"
-#include "shader.h"
-
+class Shader;
+class Texture2D;
 
 // A static singleton ResourceManager class that hosts several
 // functions to load Textures and Shaders. Each loaded texture
@@ -27,8 +24,8 @@ class ResourceManager
 {
 public:
   // resource storage
-  static std::map<const std::string, Shader>    shaders;
-  static std::map<const std::string, Texture2D> textures;
+  static std::map<std::string, Shader*>    shaders;
+  static std::map<std::string, Texture2D*> textures;
   
   // loads (and generates) a shader program from file loading vertex, fragment (and geometry) shader's source code. If gShaderFile is not nullptr, it also loads a geometry shader
   static Shader* loadShader(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile, const std::string& name);
@@ -47,13 +44,13 @@ public:
 
 private:
   // private constructor, that is we do not want any actual resource manager objects. Its members and functions should be publicly available (static).
-  ResourceManager() = default;
+  ResourceManager() { };
   
   // loads and generates a shader from file
-  static Shader loadShaderFromFile(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile = nullptr);
+  static Shader* loadShaderFromFile(const char* vShaderFile, const char* fShaderFile, const char* gShaderFile = nullptr);
   
   // loads a single texture from file
-  static Texture2D loadTextureFromFile(const char* file, bool alpha);
+  static Texture2D* loadTextureFromFile(const char* file, bool alpha);
 };
 
 #endif

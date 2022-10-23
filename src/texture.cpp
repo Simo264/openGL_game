@@ -6,10 +6,10 @@
 ** Creative Commons, either version 4 of the License, or (at your
 ** option) any later version.
 ******************************************************************/
-#include <iostream>
 
-#include "texture2D.h"
+#include "texture.h"
 
+#include <GL/glew.h>
 
 Texture2D::Texture2D() : 
   width(0), 
@@ -24,7 +24,7 @@ Texture2D::Texture2D() :
   glGenTextures(1, &ID);
 }
 
-void Texture2D::generate(unsigned int width, unsigned int height, unsigned char* data)
+void Texture2D::generate(uint32_t width, uint32_t height, unsigned char* data)
 {
   this->width = width;
   this->height = height;
@@ -44,7 +44,7 @@ void Texture2D::generate(unsigned int width, unsigned int height, unsigned char*
   unbind();
 }
 
-void Texture2D::activeTexture(unsigned int count) const
+void Texture2D::activeTexture(uint32_t count) const
 {
   glActiveTexture(GL_TEXTURE0 + count);
 }

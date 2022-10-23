@@ -1,12 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <GL/glew.h>
-#include <memory>
-#include <vector>
+#include "game_level.h"
+#include <cstdint>
 
-
-// Represents the current state of the game
 enum GameState { 
   GAME_ACTIVE, 
   GAME_MENU, 
@@ -16,10 +13,7 @@ enum GameState {
 class Game
 {
 private:
-  std::unique_ptr<class SpriteRenderer> m_ptrRenderer;
-
-  std::vector<class GameLevel> m_levels;
-  uint32_t m_currentLevel;
+  void doCollisions();
 
 public:
   GameState state;
@@ -29,8 +23,10 @@ public:
   uint32_t width;
   uint32_t height;
 
-  Game(uint32_t width, uint32_t height);
-  ~Game();
+  std::vector<GameLevel> levels;
+  uint32_t currentLevel;
+
+  Game(uint32_t width_, uint32_t height_);
 
   // initialize game state (load all shaders/textures/levels)
   void init();

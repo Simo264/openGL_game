@@ -1,7 +1,6 @@
 #ifndef VERTEX_BUFFER_LAYOUT_H
 #define VERTEX_BUFFER_LAYOUT_H
 
-#include <GL/glew.h>
 #include <vector>
 
 struct BufferElement
@@ -20,13 +19,13 @@ private:
   std::vector<BufferElement> m_elements;
 
 public:
-  VertexBufferLayout() = default;
-  ~VertexBufferLayout() = default;
+  VertexBufferLayout() { };
+  ~VertexBufferLayout() { };
 
   void pushFloats(int count, void* pointer)
   {
     m_elements.push_back({ 
-      GL_FLOAT, 
+      0x1406, // GL_FLOAT
       static_cast<uint32_t>(count),
       static_cast<uint32_t>(sizeof(float)*count),
       false,

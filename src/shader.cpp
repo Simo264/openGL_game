@@ -9,6 +9,8 @@
 
 #include "shader.h"
 
+#include <GL/glew.h>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 
 Shader& Shader::use()

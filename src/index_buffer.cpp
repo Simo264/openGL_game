@@ -1,7 +1,8 @@
 #include "index_buffer.h"
 
-IndexBuffer::IndexBuffer(uint32_t size, const void* data, GLenum usage)
-  : m_size(size)
+#include <GL/glew.h>
+
+IndexBuffer::IndexBuffer(uint32_t size, const void* data, uint32_t usage)
 {
   glGenBuffers(1, &m_id);
   bind();
@@ -13,7 +14,7 @@ IndexBuffer::~IndexBuffer()
   deleteBuffer();
 }
 
-void IndexBuffer::bufferData(uint32_t size, const void* data, GLenum usage)
+void IndexBuffer::bufferData(uint32_t size, const void* data, uint32_t usage)
 {
   glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage); 
 }

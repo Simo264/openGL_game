@@ -1,7 +1,7 @@
 #ifndef VERTEX_BUFFER_H
 #define VERTEX_BUFFER_H
 
-#include <GL/glew.h>
+#include <cstdint>
 
 class VertexBuffer
 {
@@ -10,10 +10,10 @@ private:
 
 public:
   VertexBuffer();
-  VertexBuffer(uint32_t size, const void* data, GLenum usage = GL_STATIC_DRAW);
+  VertexBuffer(uint32_t size, const void* data, uint32_t usage);
   ~VertexBuffer();
 
-  void bufferData(uint32_t size, const void* data, GLenum usage);
+  void bufferData(uint32_t size, const void* data, uint32_t usage);
   void bufferSubData(uint32_t offset, uint32_t size, const void* data);
 
   void bind();

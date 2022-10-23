@@ -1,7 +1,6 @@
 #include "vertex_buffer.h"
-#include "vertex.h"
 
-#include <iostream>
+#include <GL/glew.h>
 
 VertexBuffer::VertexBuffer()
 {
@@ -9,7 +8,7 @@ VertexBuffer::VertexBuffer()
   bind();
 }
 
-VertexBuffer::VertexBuffer(uint32_t size, const void* data, GLenum usage)
+VertexBuffer::VertexBuffer(uint32_t size, const void* data, uint32_t usage)
 {
   glGenBuffers(1, &m_id);
   bind();
@@ -21,7 +20,7 @@ VertexBuffer::~VertexBuffer()
   deleteBuffer();
 }
 
-void VertexBuffer::bufferData(uint32_t size, const void* data, GLenum usage)
+void VertexBuffer::bufferData(uint32_t size, const void* data, uint32_t usage)
 {
   glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 }

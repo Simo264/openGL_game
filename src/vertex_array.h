@@ -1,10 +1,10 @@
 #ifndef VERTEX_ARRAY_H
 #define VERTEX_ARRAY_H
 
-#include <GL/glew.h>
+#include "vertex_buffer.h"
+#include "vertex_buffer_layout.h"
 
-class VertexBuffer;
-class VertexBufferLayout;
+#include <cstdint>
 
 class VertexArray
 {

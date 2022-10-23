@@ -9,7 +9,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <GL/glew.h>
+#include <cstdint>
 
 // Texture2D is able to store and configure a texture in OpenGL.
 // It also hosts utility functions for easy management.
@@ -36,9 +36,9 @@ public:
   Texture2D();
 
   // generates texture from image data
-  void generate(unsigned int width, unsigned int height, unsigned char* data);
+  void generate(uint32_t width, uint32_t height, unsigned char* data);
 
-  void activeTexture(unsigned int count = 0) const;
+  void activeTexture(uint32_t count = 0) const;
 
   // binds the texture as the current active GL_TEXTURE_2D texture object
   void bind() const;
