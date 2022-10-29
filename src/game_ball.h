@@ -12,6 +12,7 @@
 class GameBall : public GameObject
 {
 public:
+  float radius;
   bool stuck;
 
   GameBall(

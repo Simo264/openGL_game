@@ -35,6 +35,9 @@ public:
   void processInput(float deltaTime);
   void update(float deltaTime);
   void render();
+
+  void resetLevel(); 
+  void resetPlayer();
 };
 
 #endif

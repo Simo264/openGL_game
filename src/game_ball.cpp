@@ -11,7 +11,8 @@ GameBall::GameBall(glm::vec2 position_,
   glm::vec2 velocity_
 )
   :GameObject{GL_STATIC_DRAW, position_, dimension_, texture_, color_, rotation_, velocity_},
-  stuck { true }
+  stuck { true },
+  radius { dimension_.x / 2 }
 {
 }
 
