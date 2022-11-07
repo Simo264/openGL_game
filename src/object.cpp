@@ -5,12 +5,21 @@
 Object::Object(uint32_t usage)
 {
   glm::vec2 positions[4] = {
-    glm::vec2{ 1, 1 }, glm::vec2{ 0, 1 }, glm::vec2{ 1, 0 }, glm::vec2{ 0, 0 }   
+    glm::vec2{ 1, 1 }, 
+    glm::vec2{ 0, 1 }, 
+    glm::vec2{ 1, 0 }, 
+    glm::vec2{ 0, 0 }   
   };
   glm::vec2 textCoords[4] = {
-    glm::vec2{ 1, 1 }, glm::vec2{ 0, 1 }, glm::vec2{ 1, 0 }, glm::vec2{ 0, 0 }   
+    glm::vec2{ 1, 1 }, 
+    glm::vec2{ 0, 1 }, 
+    glm::vec2{ 1, 0 }, 
+    glm::vec2{ 0, 0 }   
   };
-  uint32_t indices[6] = { 0,1,2,  1,2,3 };
+  uint32_t indices[6] = { 
+    0,1,2,
+    1,2,3
+  };
   
   m_vertexArray = std::unique_ptr<VertexArray>(new VertexArray());
   

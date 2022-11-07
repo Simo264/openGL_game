@@ -1,6 +1,9 @@
 #ifndef COLLISION_DETECTION_H
 #define COLLISION_DETECTION_H
 
+#include "game_object.h"
+#include "game_ball.h"
+
 #include <tuple>
 #include <glm/glm.hpp>
 
@@ -13,9 +16,9 @@ class CollisionDetection
 public:
   CollisionDetection() { }
 
-  static bool checkCollision(class GameObject* one, class GameObject* two);
+  static bool checkCollision(GameObject* one, GameObject* two);
 
-  static Collision checkCollision(class GameBall* ball, class GameObject* object);
+  static Collision checkCollision(GameBall* ball, GameObject* object);
 
   static Direction vectorDirection(glm::vec2 target);
 };

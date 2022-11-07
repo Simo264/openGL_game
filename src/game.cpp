@@ -1,27 +1,27 @@
 #include "game.h"
-#include "shader.h"
 #include "game_object.h"
 #include "game_ball.h"
-
 #include "resource_manager.h"
 #include "collision_detection.h"
+#include "particle_system.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
+#include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 GameObject* background; 
 GameObject* player; 
 GameBall* ball;
+ParticleGenerator* particles;
 
-// Initial velocity of the Paddle 
 static const float PLAYER_SPEED = 5;
 
-// Initial velocity of the Ball
-static const glm::vec2 INITIAL_BALL_VELOCITY(
-  300 * cos(glm::radians(45)),      
-  -(300 * sin(glm::radians(45)))   
+static const glm::vec2 BALL_DIMENSION = { 25,25 }; 
+
+static const glm::vec2 BALL_INITIAL_VELOCITY(
+  300 * cos(glm::radians(45.f)),      
+  -(300 * sin(glm::radians(45.f)))   
 );
 
 
@@ -33,20 +33,23 @@ Game::Game(uint32_t width_, uint32_t height_)
 void Game::init()
 {
   // load shaders
-  Shader* shader = ResourceManager::loadShader(
-    "../shaders/sprite.vertex.shader", 
-    "../shaders/sprite.fragment.shader", 
-    nullptr, 
-    "sprite"
-  );
-  shader->setInteger("image", 0);
-
+  ResourceManager::loadShader("../shaders/sprite.vertex.shader", "../shaders/sprite.fragment.shader", nullptr, "sprite");
+  ResourceManager::loadShader("../shaders/particle.vertex.shader", "../shaders/particle.fragment.shader", nullptr, "particle");
+  
+  // configure shaders
+  ResourceManager::getShader("sprite")->setInteger("image", 0);
+  ResourceManager::getShader("particle")->setInteger("sprite", 0);
+  
   // load textures
   ResourceManager::loadTexture("../res/background.jpg",  false,  "background");
   ResourceManager::loadTexture("../res/paddle.png",      true,   "paddle");
   ResourceManager::loadTexture("../res/ball.png",        true,   "ball");
   ResourceManager::loadTexture("../res/block.png",       false,  "block");
   ResourceManager::loadTexture("../res/block_solid.png", false,  "block_solid");
+  ResourceManager::loadTexture("../res/particle.png",    true,   "particle");
+
+  // set render-specific controls
+  particles = new ParticleGenerator(ResourceManager::getShader("particle"), ResourceManager::getTexture("particle"), 500);
 
   // load levels
   levels.push_back(GameLevel("../res/one.lvl",   width, height / 2));
@@ -58,7 +61,7 @@ void Game::init()
   background = new GameObject(
     GL_STATIC_DRAW,
     { 0,0 },
-    { 720,720 },
+    { width,height },
     ResourceManager::getTexture("background"),
     { 0,1,0 }
   );
@@ -71,15 +74,13 @@ void Game::init()
     0.f,
     { 0,0 }
   );
-
-  const glm::vec2 ballDim = { 50,50 };
   ball = new GameBall(
-    { player->position.x + (ballDim.x / 2), player->position.y - ballDim.y },
-    ballDim,
+    { player->position.x + (BALL_DIMENSION.x / 2), player->position.y - BALL_DIMENSION.y },
+    BALL_DIMENSION,
     ResourceManager::getTexture("ball"),
     { 1,1,1 },
     0.f,
-    INITIAL_BALL_VELOCITY
+    BALL_INITIAL_VELOCITY
   );
 }
 
@@ -125,6 +126,9 @@ void Game::update(float deltaTime)
 
   doCollisions();
 
+  // update particles
+  particles->update(deltaTime, ball, 2, glm::vec2(ball->radius / 2.0f));
+
   // did ball reach bottom edge?
   if (ball->position.y >= height) 
   {
@@ -145,6 +149,8 @@ void Game::render()
   
   levels[currentLevel].render(shader);
 
+  particles->draw();
+  
   ball->render(shader);
 }
 
@@ -209,7 +215,6 @@ void Game::doCollisions()
   } 
 }
 
-
 void Game::resetLevel()
 {
 
@@ -219,5 +224,5 @@ void Game::resetPlayer()
 {
   // reset player/ball stats
   player->position = glm::vec2(width / 2.0f - player->dimension.x / 2.0f, height - player->dimension.y);
-  ball->reset(player->position + glm::vec2(player->dimension.x / 2.0f - ball->radius, -(ball->radius * 2.0f)), INITIAL_BALL_VELOCITY);
+  ball->reset(player->position + glm::vec2(player->dimension.x / 2.0f - ball->radius, -(ball->radius * 2.0f)), BALL_INITIAL_VELOCITY);
 }

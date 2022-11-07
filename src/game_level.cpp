@@ -1,7 +1,4 @@
 #include "game_level.h"
-#include "game_object.h"
-#include "shader.h"
-#include "texture.h"
 #include "resource_manager.h"
 
 #include <fstream>

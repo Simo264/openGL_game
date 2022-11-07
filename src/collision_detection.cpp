@@ -1,6 +1,4 @@
 #include "collision_detection.h"
-#include "game_object.h"
-#include "game_ball.h"
 
 bool CollisionDetection::checkCollision(GameObject* one, GameObject* two)
 {

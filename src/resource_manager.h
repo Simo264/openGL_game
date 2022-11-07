@@ -9,11 +9,11 @@
 #ifndef RESOURCE_MANAGER_H
 #define RESOURCE_MANAGER_H
 
+#include "shader.h"
+#include "texture.h"
+
 #include <map>
 #include <string>
-
-class Shader;
-class Texture2D;
 
 // A static singleton ResourceManager class that hosts several
 // functions to load Textures and Shaders. Each loaded texture

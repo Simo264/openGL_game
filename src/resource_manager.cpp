@@ -7,8 +7,6 @@
 ** option) any later version.
 ******************************************************************/
 #include "resource_manager.h"
-#include "shader.h"
-#include "texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"

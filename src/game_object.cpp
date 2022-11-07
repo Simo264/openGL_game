@@ -1,10 +1,6 @@
 #include "game_object.h"
 
-#include "shader.h"
-#include "texture.h"
-
 #include <GL/glew.h>
-#include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
 GameObject::GameObject(uint32_t usage,
@@ -35,7 +31,6 @@ void GameObject::render(Shader* shader) const
   model = glm::rotate(model, glm::radians(rotation), glm::vec3(0,0,1)); 
   model = glm::scale(model, glm::vec3(dimension, 1.0f)); 
 
-  // const glm::mat4 model = transform.scaling * transform.rotation * transform.translation;
   shader->setMatrix4f("model", model);
   shader->setMatrix4f("projection", glm::ortho(0.0f, 720.f, 720.f, 0.0f, -1.0f, 1.0f));
   shader->setVector3f("imageColor", color);

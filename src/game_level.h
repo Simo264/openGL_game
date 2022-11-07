@@ -1,6 +1,9 @@
 #ifndef GAME_LEVEL_H
 #define GAME_LEVEL_H
 
+#include "shader.h"
+#include "game_object.h"
+
 #include <vector>
 #include <cstdint>
 
@@ -17,13 +20,13 @@ private:
 
 public:
   // level state
-  std::vector<class GameObject*> objects;
+  std::vector<GameObject*> objects;
   
   // constructor
   GameLevel(const char* file, uint32_t levelWidth, uint32_t levelHeight);
   
   // render level
-  void render(class Shader* shader);
+  void render(Shader* shader);
   
   // check if the level is completed (all non-solid tiles are destroyed)
   bool isCompleted();
